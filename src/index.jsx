@@ -17,4 +17,5 @@ const App = () => (
     </Provider>
   </Container>
 );
+
 ReactDOM.render(<App />, document.getElementById('root'));

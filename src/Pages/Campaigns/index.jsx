@@ -4,14 +4,22 @@ import { connect } from 'react-redux';
 import * as actionCreators from './actions';
 import { Table, Spinner, Alert } from 'react-bootstrap';
 import { RenderIf } from '../../Utils/Components/RenderIf';
+import TextInput from '../../Utils/Components/TextInput';
+import { Container, Row, Col} from 'react-bootstrap';
+import { filterByName, filterByEndDate, filterByStartDate } from '../actions'
 
 class Campaigns extends React.Component {
+  // startDateFilter = this.startDateFilter.bind(this);
+
   componentDidMount() {
     this.props.fetchCampaignData();
-    window.app = this;
+    window.AddCampaigns = campaignData => this.props.addCampaignData(campaignData);
   }
-  AddCampaigns = (campaignData) =>{
-    this.props.addCampaignData(campaignData);
+  startDateFilter = event => {
+      console.log(event.target.value)
+  }
+  endDateFilter = event => {
+    console.log(event.target.value)
   }
   render() {
     return (
@@ -22,6 +30,31 @@ class Campaigns extends React.Component {
           </Alert>
         </RenderIf>
         <RenderIf isTrue={this.props.campaign && this.props.campaign.data.length > 0}>
+          <Container style={{paddingBottom: 10}}>
+            <Row>
+              <Col>
+                <TextInput
+                  onChange={event => {this.props.dispatch(filterByStartDate(event.target.value))}}
+                  type='date'
+                  label='Start date'>
+                  </TextInput>
+              </Col>
+              <Col>
+                <TextInput
+                  onChange={event => {this.props.dispatch(filterByEndDate(event.target.value))}}
+                  type='date'
+                  label='End date'>
+                  </TextInput>
+              </Col>
+              <Col>
+                <TextInput
+                  onChange={event => {this.props.dispatch(filterByName(event.target.value))}}
+                  type='text'
+                  label='Search by name'>
+                  </TextInput>
+              </Col>
+            </Row>
+          </Container>
           <Table striped bordered hover size="sm" responsive="md">
             <thead>
               <tr>
@@ -34,7 +67,7 @@ class Campaigns extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.campaign.data.map((user, index)=> {
+              {this.props.campaign.data.filter(user => !user.filteredOutName && !user.filteredOutEndDate && !user.filteredOutStartDate).map((user, index)=> {
                 return (
                 <tr key={index}>
                   <td>{user.name}</td>
@@ -42,10 +75,10 @@ class Campaigns extends React.Component {
                   <td>{user.startDate}</td>
                   <td>{user.endDate}</td>
                   <td>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={(user.startDate > Date.Now && Date.Now < user.endDate) ? 'green' : 'red'} className="bi bi-circle-fill" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={(new Date(user.startDate) < new Date() && new Date() < new Date(user.endDate)) ? 'green' : 'red'} className="bi bi-circle-fill" viewBox="0 0 16 16">
                       <circle cx="8" cy="8" r="8"/>
                     </svg>
-                    <span style={{paddingLeft: 10}}>{(user.startDate > Date.Now && Date.Now < user.endDate) ? 'Active' : 'Inactive'}</span>
+                    <span style={{paddingLeft: 10}}>{(new Date(user.startDate) < new Date() && new Date() < new Date(user.endDate)) ? 'Active' : 'Inactive'}</span>
                   </td>
                   <td>{user.budget}</td>
                 </tr>
@@ -63,7 +96,8 @@ class Campaigns extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(actionCreators, dispatch);
+  let actions =  bindActionCreators(actionCreators, dispatch);
+  return { ...actions, dispatch };
 };
 
 const mapStateToProps = (store) => {

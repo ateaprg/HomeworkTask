@@ -1,8 +1,7 @@
 import {api} from '../../Utils/api';
 import { FETCH_CAMPAIGNS_DATA, 
         FETCH_CAMPAIGNS_DATA_FAILURE, 
-        FETCH_CAMPAIGNS_DATA_NOT_FOUND, 
-        CAMPAIGNS_NEW_DATA 
+        FETCH_CAMPAIGNS_DATA_NOT_FOUND
       } from "../actions"
 
 export const fetchCampaignData = () => dispatch => {
@@ -30,11 +29,5 @@ export const fetchCampaignData = () => dispatch => {
           error: 'Error while getting data'
         })
       }
-  })
-};
-export const addCampaignData = campaignData => dispatch => {
-  dispatch({
-    type: CAMPAIGNS_NEW_DATA,
-    newItems: campaignData
   })
 };

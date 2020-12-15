@@ -9,7 +9,7 @@ import {
   } from '../actions'
 
 const INITIAL_STATE = { data: [], error: null }
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case FETCH_CAMPAIGNS_DATA:
             return {
@@ -24,17 +24,26 @@ export default (state = INITIAL_STATE, action) => {
                 error: action.error,
             };
         case CAMPAIGNS_NEW_DATA:
-            state.data = state.data.concat(action.newItems)
+            action.campaignData.forEach( user =>  {
+                if((!state.nameFilter || (user.name && user.name.toLowerCase().includes(state.nameFilter.toLowerCase())))
+                && (!state.endDateFilter || (user.endDate && new Date(user.endDate) <= new Date(state.endDateFilter)))
+                && (!state.startDateFilter || (user.endDate && new Date(user.startDate) >= new Date(state.startDateFilter)))) {
+                    user.filteredOutName = false;
+                }
+                else user.filteredOutName = true;
+            });
+            state.data = state.data.concat(action.campaignData)
             return {
                 ...state
             };
         case FILTER_BY_NAME:
             state.data.forEach( user =>  {
-                if(user.name.includes(action.filterValue)) user.filteredOutName = false;
+                if(user.name.toLowerCase().includes(action.filterValue.toLowerCase())) user.filteredOutName = false;
                 else user.filteredOutName = true;
             });
             return {
-                ...state
+                ...state,
+                nameFilter: action.filterValue
             }
         case FILTER_BY_END_DATE:
             state.data.forEach( user =>  {
@@ -42,7 +51,8 @@ export default (state = INITIAL_STATE, action) => {
                 else user.filteredOutEndDate = true;
             });
             return {
-                ...state
+                ...state,
+                endDateFilter: action.filterValue
             }
         case FILTER_BY_START_DATE:
             state.data.forEach( user =>  {
@@ -50,9 +60,11 @@ export default (state = INITIAL_STATE, action) => {
                 else user.filteredOutStartDate = true;
             });
             return {
-                ...state
+                ...state,
+                startDateFilter: action.filterValue
             }
       default: 
         return state;
     }
   }
+  export default reducer;

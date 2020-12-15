@@ -9,6 +9,7 @@ const TextInput = props => {
             value={props.value}
             onChange={props.onChange}
             placeholder={props.placeholder}
+            min={props.minDate}
         />
     </div>
   );

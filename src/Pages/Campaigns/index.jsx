@@ -6,26 +6,20 @@ import { Table, Spinner, Alert } from 'react-bootstrap';
 import { RenderIf } from '../../Utils/Components/RenderIf';
 import TextInput from '../../Utils/Components/TextInput';
 import { Container, Row, Col} from 'react-bootstrap';
-import { filterByName, filterByEndDate, filterByStartDate } from '../actions'
+import { filterByName, filterByEndDate, filterByStartDate, AddCampaigns } from '../actions'
 
 class Campaigns extends React.Component {
-  // startDateFilter = this.startDateFilter.bind(this);
 
   componentDidMount() {
     this.props.fetchCampaignData();
-    window.AddCampaigns = campaignData => this.props.addCampaignData(campaignData);
+    window.AddCampaigns = campaignData => this.props.dispatch(AddCampaigns(campaignData));
   }
-  startDateFilter = event => {
-      console.log(event.target.value)
-  }
-  endDateFilter = event => {
-    console.log(event.target.value)
-  }
+  
   render() {
     return (
       <div>
         <RenderIf isTrue={this.props.campaign.error}>
-          <Alert key={'error'} variant='danger'>
+          <Alert key='error' variant='danger'>
             {this.props.campaign.error}
           </Alert>
         </RenderIf>
@@ -43,7 +37,8 @@ class Campaigns extends React.Component {
                 <TextInput
                   onChange={event => {this.props.dispatch(filterByEndDate(event.target.value))}}
                   type='date'
-                  label='End date'>
+                  label='End date'
+                  minDate={this.props.campaign.startDateFilter}>
                   </TextInput>
               </Col>
               <Col>
@@ -67,7 +62,12 @@ class Campaigns extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.campaign.data.filter(user => !user.filteredOutName && !user.filteredOutEndDate && !user.filteredOutStartDate).map((user, index)=> {
+              {this.props.campaign.data.filter(user => !user.filteredOutName 
+                                                && !user.filteredOutEndDate 
+                                                && !user.filteredOutStartDate 
+                                                && ((typeof user.startDate === 'undefined' || typeof user.endDate === 'undefined') 
+                                                || (new Date(user.startDate) < new Date(user.endDate))))
+              .map((user, index)=> {
                 return (
                 <tr key={index}>
                   <td>{user.name}</td>
@@ -80,7 +80,7 @@ class Campaigns extends React.Component {
                     </svg>
                     <span style={{paddingLeft: 10}}>{(new Date(user.startDate) < new Date() && new Date() < new Date(user.endDate)) ? 'Active' : 'Inactive'}</span>
                   </td>
-                  <td>{user.budget}</td>
+                  <td>{user.Budget ? user.Budget + ' USD' : ''}</td>
                 </tr>
                 )
               })}

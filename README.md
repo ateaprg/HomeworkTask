@@ -11,3 +11,9 @@ Project created using ReactJs 17.0.1
 
 -AddCampaigns method call from console:
 > `AddCampaigns(data)`
+
+- To create production build:
+> `npm run build` 
+
+- To run unit tests:
+> `npm test` 

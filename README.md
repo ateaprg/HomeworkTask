@@ -4,7 +4,8 @@ Project created using ReactJs 17.0.1
 
 - To prepare frontend environmet you have to run:
 > `npm install`  
-> `npm start`  
+> `npm start` 
+- Deployed on 8080 port. 
 
 - you have to change your backend api url
 > `/src/Utils/api.js`
@@ -16,4 +17,4 @@ Project created using ReactJs 17.0.1
 > `npm run build` 
 
 - To run unit tests:
-> `npm test` 
+> `npx jest` 

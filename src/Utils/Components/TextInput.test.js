@@ -11,4 +11,11 @@ describe('TextInput testing', () => {
         const text = wrapper.find('p');
         expect(text.text()).toBe('test');
     });
+    it('Should call function on input value change', () => {
+        let changeableValue = false;
+        const wrapper = shallow(<TextInput onChange={() => {changeableValue = true;}} ></TextInput>);
+        const input = wrapper.find('input');
+        input.simulate('change', { target: { value: 'test' } });
+        expect(changeableValue).toBe(true);
+    });
 })

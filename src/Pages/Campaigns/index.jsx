@@ -2,11 +2,11 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from './actions';
-import { Table, Spinner, Alert } from 'react-bootstrap';
 import { RenderIf } from '../../Utils/Components/RenderIf';
-import TextInput from '../../Utils/Components/TextInput';
-import { Container, Row, Col} from 'react-bootstrap';
-import { filterByName, filterByEndDate, filterByStartDate, AddCampaigns } from '../actions'
+import AddCampaignData from './Components/newCampaignData';
+import FilterCampaignData from './Components/filterCampaignData';
+import { Table, Spinner, Alert} from 'react-bootstrap';
+import { AddCampaigns } from '../actions'
 
 class Campaigns extends React.Component {
 
@@ -24,32 +24,10 @@ class Campaigns extends React.Component {
           </Alert>
         </RenderIf>
         <RenderIf isTrue={this.props.campaign && this.props.campaign.data.length > 0}>
-          <Container style={{paddingBottom: 10}}>
-            <Row>
-              <Col>
-                <TextInput
-                  onChange={event => {this.props.dispatch(filterByStartDate(event.target.value))}}
-                  type='date'
-                  label='Start date'>
-                  </TextInput>
-              </Col>
-              <Col>
-                <TextInput
-                  onChange={event => {this.props.dispatch(filterByEndDate(event.target.value))}}
-                  type='date'
-                  label='End date'
-                  minDate={this.props.campaign.startDateFilter}>
-                  </TextInput>
-              </Col>
-              <Col>
-                <TextInput
-                  onChange={event => {this.props.dispatch(filterByName(event.target.value))}}
-                  type='text'
-                  label='Search by name'>
-                  </TextInput>
-              </Col>
-            </Row>
-          </Container>
+          <FilterCampaignData
+            dispatch = {this.props.dispatch}
+            campaign = {this.props.campaign}>
+          </FilterCampaignData>
           <Table striped bordered hover size="sm" responsive="md">
             <thead>
               <tr>
@@ -90,6 +68,9 @@ class Campaigns extends React.Component {
         <RenderIf isTrue={this.props.campaign.data.length === 0 && this.props.campaign.error === null}>
           <Spinner className='loading' animation="border" variant="primary" />
         </RenderIf>
+        <AddCampaignData 
+          dispatch = {this.props.dispatch}>
+        </AddCampaignData>
       </div>
     );
   }

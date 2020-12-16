@@ -38,7 +38,7 @@ const reducer = (state = INITIAL_STATE, action) => {
             };
         case FILTER_BY_NAME:
             state.data.forEach( user =>  {
-                if(user.name.toLowerCase().includes(action.filterValue.toLowerCase())) user.filteredOutName = false;
+                if(user.name && user.name.toLowerCase().includes(action.filterValue.toLowerCase())) user.filteredOutName = false;
                 else user.filteredOutName = true;
             });
             return {
@@ -47,7 +47,7 @@ const reducer = (state = INITIAL_STATE, action) => {
             }
         case FILTER_BY_END_DATE:
             state.data.forEach( user =>  {
-                if(new Date(user.endDate) <= new Date(action.filterValue)) user.filteredOutEndDate = false;
+                if(user.endDate && new Date(user.endDate) <= new Date(action.filterValue)) user.filteredOutEndDate = false;
                 else user.filteredOutEndDate = true;
             });
             return {
@@ -56,7 +56,7 @@ const reducer = (state = INITIAL_STATE, action) => {
             }
         case FILTER_BY_START_DATE:
             state.data.forEach( user =>  {
-                if(new Date(user.startDate) >= new Date(action.filterValue)) user.filteredOutStartDate = false;
+                if(user.startDate && new Date(user.startDate) >= new Date(action.filterValue)) user.filteredOutStartDate = false;
                 else user.filteredOutStartDate = true;
             });
             return {

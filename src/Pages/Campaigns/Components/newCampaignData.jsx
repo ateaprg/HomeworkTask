@@ -27,7 +27,7 @@ class NewCampaignData extends React.Component {
         try {
             var result = JSON.parse(this.state.newCampaignData);
             this.props.dispatch(AddCampaigns(result));
-            this.setState({newCampaignData: '', showAddCampaignPart: false});
+            this.setState({newCampaignData: '', showAddCampaignPart: false, jsonError: false});
         } catch (e) {
             this.setState({jsonError: true});
         }
